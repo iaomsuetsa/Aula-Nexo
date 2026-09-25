@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aula Nexo · Aulas accesibles para estudiantes neurodivergentes</title>
+  <meta name="description" content="Aula Nexo ayuda a las universidades a crear aulas más accesibles para estudiantes neurodivergentes: herramientas digitales, recursos para docentes, ajustes inclusivos y seguimiento.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23262626'/><text x='50' y='72' font-size='64' text-anchor='middle' fill='%23F2F0EC' font-family='Arial Black'>N</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========== 1. VARIABLES (colores y tipografía) ========== */
+    :root {
+      --carbon: #262626;
+      --papel: #F2F0EC;
+      --tinta: #1E1E1E;
+      --tenue: #45423D;
+      --linea: #CFCAC0;
+      --verde: #A8E08F;
+      --rosa: #E47BC3;
+      --morado: #A99BFF;
+      --menta: #5FD3A6;
+      --naranja: #FFA062;
+      --foco: #7A5CF0;
+      --enlace: #4A2FC4;
+
+      --display: "Anton", "Impact", "Arial Narrow", sans-serif;
+      --texto: "Atkinson Hyperlegible", "Verdana", "Segoe UI", sans-serif;
+
+      --tam-base: 1.125rem;
+      --interlineado: 1.65;
+      --espaciado-letra: 0;
+      --espaciado-palabra: 0;
+    }
+
+    /* Tamaño de texto elegido por la persona usuaria */
+    html[data-texto="grande"]  { font-size: 112.5%; }
+    html[data-texto="enorme"]  { font-size: 125%; }
+
+    /* ========== 2. BASE ========== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
+    body {
+      margin: 0;
+      background: var(--papel);
+      color: var(--tinta);
+      font-family: var(--texto);
+      font-size: var(--tam-base);
+      line-height: var(--interlineado);
+      letter-spacing: var(--espaciado-letra);
+      word-spacing: var(--espaciado-palabra);
+    }
+    img, svg { max-width: 100%; }
+    p, li { max-width: 65ch; }
+    a { color: var(--enlace); text-underline-offset: .2em; }
+    .oscuro a { color: var(--verde); }
+
+    h1, h2, h3 { line-height: 1.05; margin: 0 0 .6em; }
+    h2 {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      text-transform: uppercase;
+      letter-spacing: .01em;
+    }
+    h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+
+    /* Foco muy visible para quien navega con teclado */
+    :focus-visible {
+      outline: 4px solid var(--foco);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+    .oscuro :focus-visible { outline-color: var(--verde); }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    /* Enlace para saltar al contenido */
+    .saltar {
+      position: absolute; left: 1rem; top: -4rem; z-index: 100;
+      background: var(--verde); color: var(--tinta);
+      padding: .8rem 1.2rem; font-weight: 700; text-decoration: none;
+    }
+    .saltar:focus { top: 1rem; }
+
+    .contenedor { width: min(1180px, 100% - 2.5rem); margin-inline: auto; }
+    section { padding-block: clamp(3.5rem, 8vw, 6rem); }
+
+    /* Secciones oscuras con la cuadrícula de la presentación */
+    .oscuro {
+      background-color: var(--carbon);
+      background-image:
+        linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 56px 56px;
+      color: var(--papel);
+    }
+
+    /* Título partido: bloque claro + texto claro (como la presentación) */
+    .titulo-partido { display: flex; flex-wrap: wrap; gap: .25em .35em; align-items: baseline; }
+    .titulo-partido .bloque { background: var(--papel); color: var(--carbon); padding: 0 .18em; }
+    .claro .titulo-partido .bloque { background: var(--carbon); color: var(--papel); }
+
+    /* ========== 3. BARRA DE ACCESIBILIDAD ========== */
+    .barra-acc {
+      background: var(--tinta); color: var(--papel);
+      border-bottom: 1px solid #3a3a3a;
+      font-size: .95rem;
+    }
+    .barra-acc .contenedor {
+      display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.4rem;
+      padding-block: .6rem;
+    }
+    .barra-acc h2 {
+      font-family: var(--texto); font-size: .95rem; text-transform: none;
+      font-weight: 700; margin: 0; letter-spacing: 0;
+    }
+    .grupo-acc { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+    .grupo-acc > span { margin-right: .2rem; }
+    .btn-acc {
+      font: inherit; font-weight: 700; cursor: pointer;
+      min-height: 44px; min-width: 44px; padding: .35rem .8rem;
+      background: transparent; color: var(--papel);
+      border: 2px solid #8a857c; border-radius: 6px;
+    }
+    .btn-acc:hover { border-color: var(--papel); }
+    .btn-acc[aria-pressed="true"] { background: var(--verde); color: var(--tinta); border-color: var(--verde); }
+    .btn-acc[aria-pressed="true"]::before { content: "✓ "; }
+
+    /* ========== 4. ENCABEZADO Y NAVEGACIÓN ========== */
+    .encabezado {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--papel); border-bottom: 2px solid var(--carbon);
+    }
+    .encabezado .contenedor {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      min-height: 4.5rem;
+    }
+    .logo {
+      font-family: var(--display); font-size: 1.9rem; text-decoration: none;
+      color: var(--carbon); display: inline-flex; gap: .25rem; line-height: 1;
+    }
+    .logo span:first-child { background: var(--carbon); color: var(--papel); padding: .1rem .3rem; }
+    .logo span:last-child { padding: .1rem 0; }
+
+    .nav-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .2rem; }
+    .nav-lista a {
+      display: block; padding: .6rem .75rem; color: var(--tinta);
+      text-decoration: none; font-weight: 700; border-radius: 6px;
+    }
+    .nav-lista a:hover { background: #E3DFD6; text-decoration: underline; }
+    .btn-menu {
+      display: none; font: inherit; font-weight: 700; cursor: pointer;
+      min-height: 44px; padding: .4rem 1rem;
+      background: var(--carbon); color: var(--papel); border: 0; border-radius: 6px;
+    }
+
+    @media (max-width: 960px) {
+      .btn-menu { display: inline-block; }
+      .nav-principal { position: absolute; left: 0; right: 0; top: 100%; background: var(--papel); border-bottom: 2px solid var(--carbon); }
+      .nav-principal[hidden] { display: none; }
+      .nav-lista { flex-direction: column; padding: .5rem 1.25rem 1rem; }
+      .nav-lista a { padding: .85rem .5rem; border-bottom: 1px solid var(--linea); }
+    }
+    @media (min-width: 961px) {
+      .nav-principal[hidden] { display: block; }
+    }
+
+    /* ========== 5. PORTADA (HERO) ========== */
+    .hero { padding-block: clamp(3rem, 9vw, 7rem) clamp(3rem, 7vw, 5rem); }
+    .hero h1 {
+      font-family: var(--display); font-weight: 400;
+      font-size: clamp(4.5rem, 17vw, 12rem);
+      line-height: .9; text-transform: uppercase; margin: 0 0 1.5rem;
+      display: flex; flex-wrap: wrap; gap: .1em .15em;
+    }
+    .hero h1 .bloque { background: var(--papel); color: var(--carbon); padding: .06em .12em 0; }
+    .hero .subtitulo { font-size: clamp(1.25rem, 2.5vw, 1.6rem); max-width: 34ch; margin: 0 0 2rem; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .btn {
+      display: inline-block; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer;
+      min-height: 48px; padding: .8rem 1.5rem; border-radius: 999px; border: 2px solid transparent;
+    }
+    .btn-primario { background: var(--verde); color: var(--tinta); }
+    .btn-primario:hover { background: #C4EDB2; }
+    .btn-secundario { background: transparent; color: var(--papel); border-color: var(--papel); }
+    .btn-secundario:hover { background: rgba(255,255,255,.1); }
+    .oscuro .btn-primario, .oscuro .btn-primario:visited { color: var(--tinta); }
+    .oscuro .btn-secundario { color: var(--papel); }
+
+    /* Accesos rápidos: la portada como punto de partida */
+    .accesos { margin-top: clamp(3rem, 7vw, 5rem); }
+    .accesos h2 { font-family: var(--texto); font-size: 1.15rem; text-transform: none; font-weight: 700; letter-spacing: 0; }
+    .accesos ul {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;
+    }
+    .accesos a {
+      display: block; height: 100%; padding: 1.2rem 1.3rem; text-decoration: none;
+      background: rgba(242,240,236,.06); border: 2px solid rgba(242,240,236,.35);
+      border-left: 8px solid var(--c, var(--verde)); color: var(--papel);
+    }
+    .accesos a:hover { background: rgba(242,240,236,.12); border-color: var(--papel); border-left-color: var(--c, var(--verde)); }
+    .accesos strong { display: block; font-size: 1.15rem; margin-bottom: .25rem; }
+    .accesos span { color: #D9D5CC; font-size: 1rem; }
+
+    /* ========== 6. SECCIONES DE CONTENIDO ========== */
+    .intro { font-size: 1.25rem; max-width: 55ch; margin-bottom: 2.5rem; }
+
+    .rejilla { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .pieza {
+      background: #fff; border: 2px solid var(--carbon); padding: 1.5rem;
+    }
+    .pieza svg { width: 48px; height: 48px; margin-bottom: .8rem; }
+    .pieza p { margin: 0; }
+
+    .dos-col { display: grid; gap: 3rem; grid-template-columns: 1fr; }
+    @media (min-width: 860px) { .dos-col { grid-template-columns: 1fr 1fr; } }
+
+    .lista-marcada { padding-left: 1.3rem; }
+    .lista-marcada li { margin-bottom: .6rem; }
+    .lista-marcada li::marker { color: var(--verde); font-size: 1.3em; }
+    .claro .lista-marcada li::marker { color: var(--carbon); }
+
+    .dato {
+      border-left: 6px solid var(--naranja); padding: .4rem 0 .4rem 1.2rem; margin: 0 0 1.6rem;
+    }
+    .dato .cifra { font-family: var(--display); font-size: 2.6rem; line-height: 1; display: block; margin-bottom: .3rem; }
+    .dato p { margin: 0; }
+    .dato cite { font-style: normal; font-size: .95rem; color: #D0CCC3; }
+
+    /* Promesa de valor: marcas de color con icono, no numeradas */
+    .promesas { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .promesas li {
+      max-width: none; display: flex; flex-direction: column; gap: .8rem;
+      padding: 1.4rem; background: #fff; border: 2px solid var(--carbon);
+    }
+    .promesas .punto {
+      width: 3.2rem; height: 3.2rem; border-radius: 50%; border: 3px solid var(--carbon);
+      background: var(--c); display: grid; place-items: center;
+    }
+    .promesas .punto svg { width: 1.5rem; height: 1.5rem; }
+    .promesas p { font-weight: 700; margin: 0; font-size: 1.1rem; }
+
+    .etiquetas { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; padding: 0; margin: 0 0 1.5rem; }
+    .etiquetas li { border: 2px solid currentColor; padding: .3rem .9rem; border-radius: 999px; font-weight: 700; }
+
+    .aviso {
+      background: #fff; border: 2px dashed var(--carbon); padding: 1.2rem 1.4rem; margin-top: 2rem; max-width: 65ch;
+    }
+
+    /* Modelo de ingresos */
+    .ingresos .pieza { border-top: 10px solid var(--c); }
+
+    /* Etapas: sí son una secuencia, por eso van numeradas */
+    .etapas { list-style: none; padding: 0; margin: 0 0 2.5rem; counter-reset: etapa; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .etapas li { counter-increment: etapa; max-width: none; position: relative; padding-top: 4.2rem; }
+    .etapas li::before {
+      content: counter(etapa);
+      position: absolute; top: 0; left: 0;
+      width: 3.2rem; height: 3.2rem; border-radius: 50%;
+      background: var(--c); color: var(--tinta); border: 3px solid var(--papel);
+      font-family: var(--display); font-size: 1.6rem; display: grid; place-items: center;
+    }
+    .etapas h3 { margin-bottom: .3rem; }
+    .etapas p { margin: 0; color: #DCD8CF; }
+    .indicadores { border-top: 2px solid rgba(242,240,236,.4); padding-top: 1.5rem; }
+
+    /* POUR */
+    .pour { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    .pour article { background: #fff; border: 2px solid var(--carbon); padding: 1.6rem; }
+    .pour .letra {
+      font-family: var(--display); font-size: 4rem; line-height: 1; display: inline-block;
+      background: var(--c); border: 3px solid var(--carbon); padding: .1em .3em; margin-bottom: 1rem;
+    }
+    .pour ul { padding-left: 1.2rem; margin: .8rem 0 0; }
+    .pour li { margin-bottom: .4rem; }
+
+    /* ========== 7. FORMULARIO ========== */
+    form { max-width: 640px; display: grid; gap: 1.4rem; }
+    .campo label, .campo legend { display: block; font-weight: 700; margin-bottom: .35rem; }
+    .campo .ayuda { display: block; font-size: .98rem; color: #D0CCC3; margin-bottom: .45rem; }
+    .campo input[type="text"], .campo input[type="email"], .campo select, .campo textarea {
+      width: 100%; font: inherit; color: var(--tinta); background: #fff;
+      border: 3px solid #8a857c; border-radius: 6px; padding: .7rem .8rem; min-height: 48px;
+    }
+    .campo textarea { min-height: 8rem; resize: vertical; }
+    .campo [aria-invalid="true"] { border-color: #FF8A8A; background: #FFF3F3; }
+    .error { display: block; color: #FFB3B3; font-weight: 700; margin-top: .4rem; }
+    .error:empty { display: none; }
+    .error:not(:empty)::before { content: "⚠ "; }
+    .check { display: flex; gap: .7rem; align-items: flex-start; }
+    .check input { width: 1.5rem; height: 1.5rem; margin-top: .2rem; flex: none; accent-color: var(--verde); }
+    .check label { font-weight: 400; }
+    .estado { padding: 1rem 1.2rem; border-radius: 6px; font-weight: 700; }
+    .estado:empty { display: none; }
+    .estado.ok { background: var(--verde); color: var(--tinta); }
+    .estado.mal { background: #FFD6D6; color: #6B0000; }
+
+    /* ========== 8. PIE DE PÁGINA ========== */
+    footer { padding-block: 3rem; font-size: 1rem; }
+    footer .contenedor { display: grid; gap: 2rem; }
+    @media (min-width: 860px) { footer .contenedor { grid-template-columns: 1fr 2fr; } }
+    footer h2 { font-family: var(--texto); font-size: 1.1rem; text-transform: none; letter-spacing: 0; font-weight: 700; }
+    .referencias { padding-left: 0; list-style: none; }
+    .referencias li { margin-bottom: .7rem; padding-left: 1.5em; text-indent: -1.5em; overflow-wrap: anywhere; }
+
+    /* ========== 9. MODOS DE ACCESIBILIDAD ========== */
+
+    /* Modo lectura: pensado para dislexia y fatiga visual */
+    body.modo-lectura {
+      --interlineado: 1.95;
+      --espaciado-letra: .05em;
+      --espaciado-palabra: .16em;
+    }
+    body.modo-lectura h1, body.modo-lectura h2, body.modo-lectura .logo,
+    body.modo-lectura .dato .cifra, body.modo-lectura .etapas li::before, body.modo-lectura .pour .letra {
+      font-family: var(--texto); font-weight: 700; text-transform: none; letter-spacing: .02em;
+    }
+    body.modo-lectura p, body.modo-lectura li { max-width: 58ch; }
+    body.modo-lectura .oscuro { background-image: none; }
+
+    /* Alto contraste */
+    body.alto-contraste { background: #000; color: #fff; }
+    body.alto-contraste .oscuro, body.alto-contraste .claro, body.alto-contraste .encabezado,
+    body.alto-contraste .nav-principal, body.alto-contraste .barra-acc {
+      background: #000; background-image: none; color: #fff;
+    }
+    body.alto-contraste .pieza, body.alto-contraste .promesas li, body.alto-contraste .pour article,
+    body.alto-contraste .aviso, body.alto-contraste .accesos a {
+      background: #000; color: #fff; border-color: #fff;
+    }
+    body.alto-contraste a, body.alto-contraste .nav-lista a, body.alto-contraste .logo { color: #FFE600; }
+    body.alto-contraste .logo span { background: transparent; color: #FFE600; border: 2px solid #FFE600; }
+    body.alto-contraste .titulo-partido .bloque, body.alto-contraste .hero h1 .bloque { background: #fff; color: #000; }
+    body.alto-contraste .btn-primario { background: #FFE600; color: #000; }
+    body.alto-contraste .btn-secundario, body.alto-contraste .btn-menu { background: #000; color: #FFE600; border: 2px solid #FFE600; }
+    body.alto-contraste .nav-lista a:hover { background: #222; }
+    body.alto-contraste .dato cite, body.alto-contraste .etapas p, body.alto-contraste .accesos span,
+    body.alto-contraste .campo .ayuda { color: #fff; }
+    body.alto-contraste :focus-visible { outline-color: #FFE600; }
+    body.alto-contraste .encabezado { border-color: #fff; }
+
+    /* Menos movimiento: respeta la preferencia del sistema o el botón */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+    body.sin-movimiento, body.sin-movimiento * { transition: none !important; animation: none !important; }
+    html:has(body.sin-movimiento) { scroll-behavior: auto; }
+
+    /* Única animación del sitio: aparece la portada al cargar */
+    @keyframes entrar { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .hero h1, .hero .subtitulo, .hero .acciones { animation: entrar .6s ease-out both; }
+    .hero .subtitulo { animation-delay: .12s; }
+    .hero .acciones { animation-delay: .24s; }
+  </style>
+</head>
+
+<body>
+  <!-- PERCEPTIBLE / OPERABLE: saltar directo al contenido con teclado -->
+  <a class="saltar" href="#contenido">Saltar al contenido principal</a>
+
+  <!-- ===== Opciones de accesibilidad ===== -->
+  <section class="barra-acc" aria-labelledby="titulo-acc">
+    <div class="contenedor">
+      <h2 id="titulo-acc">Ajusta cómo ves esta página:</h2>
+
+      <div class="grupo-acc" role="group" aria-label="Tamaño del texto">
+        <span aria-hidden="true">Texto</span>
+        <button type="button" class="btn-acc" data-texto="normal" aria-pressed="true">A<span class="sr-only"> tamaño normal</span></button>
+        <button type="button" class="btn-acc" data-texto="grande" aria-pressed="false" style="font-size:1.1em">A<span class="sr-only"> tamaño grande</span></button>
+        <button type="button" class="btn-acc" data-texto="enorme" aria-pressed="false" style="font-size:1.25em">A<span class="sr-only"> tamaño muy grande</span></button>
+      </div>
+
+      <div class="grupo-acc">
+        <button type="button" class="btn-acc" data-modo="modo-lectura" aria-pressed="false">Modo lectura</button>
+        <button type="button" class="btn-acc" data-modo="alto-contraste" aria-pressed="false">Alto contraste</button>
+        <button type="button" class="btn-acc" data-modo="sin-movimiento" aria-pressed="false">Sin animaciones</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Encabezado ===== -->
+  <header class="encabezado">
+    <div class="contenedor">
+      <a class="logo" href="#inicio" aria-label="Aula Nexo, ir al inicio">
+        <span aria-hidden="true">AULA</span><span aria-hidden="true">NEXO</span>
+      </a>
+
+      <button type="button" class="btn-menu" aria-expanded="false" aria-controls="menu">Menú</button>
+
+      <nav class="nav-principal" id="menu" aria-label="Principal">
+        <ul class="nav-lista">
+          <li><a href="#que-es">Qué es</a></li>
+          <li><a href="#problema">El problema</a></li>
+          <li><a href="#promesa">Qué puedes hacer</a></li>
+          <li><a href="#participa">Participa</a></li>
+          <li><a href="#universidades">Universidades</a></li>
+          <li><a href="#accesibilidad">Accesibilidad</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido" tabindex="-1">
+
+    <!-- ===== INICIO ===== -->
+    <section class="hero oscuro" id="inicio" aria-labelledby="titulo-inicio">
+      <div class="contenedor">
+        <h1 id="titulo-inicio"><span class="bloque">Aula</span> <span>Nexo</span></h1>
+        <p class="subtitulo">Aulas universitarias pensadas para distintas formas de aprender.</p>
+        <div class="acciones">
+          <a class="btn btn-primario" href="#que-es">Conocer Aula Nexo</a>
+          <a class="btn btn-secundario" href="#contacto">Solicitar una demostración</a>
+        </div>
+
+        <nav class="accesos" aria-labelledby="titulo-accesos">
+          <h2 id="titulo-accesos">¿Por dónde quieres empezar?</h2>
+          <ul>
+            <li><a href="#promesa" style="--c: var(--verde)"><strong>Soy estudiante</strong><span>Descubre qué puedes hacer con Aula Nexo.</span></a></li>
+            <li><a href="#que-es" style="--c: var(--morado)"><strong>Soy docente</strong><span>Recursos prácticos para tus clases.</span></a></li>
+            <li><a href="#universidades" style="--c: var(--naranja)"><strong>Represento a una universidad</strong><span>Cómo funciona el servicio y su costo.</span></a></li>
+            <li><a href="#accesibilidad" style="--c: var(--menta)"><strong>Quiero saber cómo es accesible este sitio</strong><span>Así aplicamos la metodología POUR.</span></a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ===== QUÉ ES ===== -->
+    <section class="claro" id="que-es" aria-labelledby="titulo-que-es">
+      <div class="contenedor">
+        <h2 id="titulo-que-es" class="titulo-partido"><span class="bloque">¿Qué es</span> <span>Aula Nexo?</span></h2>
+        <p class="intro">Un servicio que ayuda a las universidades a crear aulas más accesibles para estudiantes neurodivergentes. No busca reducir la exigencia: busca quitar las barreras innecesarias que frenan el aprendizaje.</p>
+
+        <div class="rejilla">
+          <div class="pieza">
+            <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="3"><rect x="13" y="4" width="22" height="40" rx="4"/><path d="M20 38h8"/><path d="M19 14h10M19 21h10M19 28h6"/></svg>
+            <h3>Herramientas digitales para estudiantes</h3>
+            <p>Agenda anticipada, instrucciones paso a paso y un canal privado para pedir apoyos.</p>
+          </div>
+          <div class="pieza">
+            <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="3"><path d="M6 10c7-3 13-3 18 2 5-5 11-5 18-2v28c-7-3-13-3-18 2-5-5-11-5-18-2z"/><path d="M24 12v28"/></svg>
+            <h3>Recursos prácticos para docentes</h3>
+            <p>Guías breves y plantillas para planear clases que funcionen para más estudiantes.</p>
+          </div>
+          <div class="pieza">
+            <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="3"><path d="M8 12h32M8 24h32M8 36h32"/><circle cx="16" cy="12" r="4" fill="#A8E08F"/><circle cx="31" cy="24" r="4" fill="#A99BFF"/><circle cx="21" cy="36" r="4" fill="#FFA062"/></svg>
+            <h3>Orientación para ajustes inclusivos</h3>
+            <p>Acompañamiento para adaptar espacios, materiales y evaluaciones.</p>
+          </div>
+          <div class="pieza">
+            <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="3"><path d="M6 42h36"/><path d="M12 34V24M22 34V16M32 34V20M42 34V8"/></svg>
+            <h3>Seguimiento de la experiencia</h3>
+            <p>Encuestas breves cada semestre para saber qué funciona y qué mejorar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== EL PROBLEMA ===== -->
+    <section class="oscuro" id="problema" aria-labelledby="titulo-problema">
+      <div class="contenedor">
+        <h2 id="titulo-problema" class="titulo-partido"><span class="bloque">El</span> <span>problema</span></h2>
+        <p class="intro">No todas las personas viven el aula, el aprendizaje y la experiencia universitaria de la misma manera.</p>
+
+        <div class="dos-col">
+          <div>
+            <h3>Barreras frecuentes</h3>
+            <p>Los estudiantes neurodivergentes pueden enfrentar:</p>
+            <ul class="lista-marcada">
+              <li>Sobrecarga por ruido, iluminación o movimiento.</li>
+              <li>Instrucciones ambiguas y cambios inesperados.</li>
+              <li>Dificultades de organización y concentración.</li>
+              <li>Presión por ocultar sus necesidades para encajar.</li>
+            </ul>
+            <p>Aunque algunos estudiantes parecen adaptarse, hacerlo puede costarles un esfuerzo académico, sensorial y social mucho mayor.</p>
+          </div>
+
+          <div>
+            <h3>Datos</h3>
+            <figure class="dato">
+              <span class="cifra">1 de 127</span>
+              <p>personas en el mundo tenía autismo en 2021. <cite>(OMS, 2025)</cite></p>
+            </figure>
+            <figure class="dato" style="border-color: var(--rosa)">
+              <span class="cifra">1 de 9</span>
+              <p>menores de 3 a 17 años en Estados Unidos había recibido un diagnóstico de TDAH en 2022. <cite>(Danielson et al., 2024)</cite></p>
+            </figure>
+            <figure class="dato" style="border-color: var(--morado)">
+              <span class="cifra">Hasta 1 de 5</span>
+              <p>personas presenta algunos síntomas relacionados con la dislexia, con intensidad muy variable. <cite>(International Dyslexia Association, s. f.)</cite></p>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROMESA DE VALOR ===== -->
+    <section class="claro" id="promesa" aria-labelledby="titulo-promesa">
+      <div class="contenedor">
+        <h2 id="titulo-promesa" class="titulo-partido"><span class="bloque">Lo que</span> <span>puedes hacer</span></h2>
+        <p class="intro">Aprendamos a no gastar energía en aparentar que no existen barreras. Con Aula Nexo, como estudiante puedes:</p>
+
+        <ul class="promesas">
+          <li>
+            <span class="punto" style="--c: var(--verde)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="2.5"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+            <p>Anticipar actividades y cambios</p>
+          </li>
+          <li>
+            <span class="punto" style="--c: var(--rosa)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="2.5"><path d="M4 6h16M4 12h10M4 18h13"/></svg></span>
+            <p>Organizar instrucciones en pasos claros</p>
+          </li>
+          <li>
+            <span class="punto" style="--c: var(--morado)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="2.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+            <p>Comunicar tus necesidades de forma confidencial</p>
+          </li>
+          <li>
+            <span class="punto" style="--c: var(--menta)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="2.5"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2-5 5-5s5 2 5 5M11 20c0-3 2-5 5-5s5 2 5 5"/></svg></span>
+            <p>Participar de distintas formas</p>
+          </li>
+          <li>
+            <span class="punto" style="--c: var(--naranja)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1E1E1E" stroke-width="2.5"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+            <p>Ubicar espacios de regulación sensorial</p>
+          </li>
+        </ul>
+
+        <h3 style="margin-top:3rem">¿Para quién es?</h3>
+        <p>Estudiantes de educación superior, principalmente de 18 a 29 años, de universidades públicas o privadas, con diagnóstico, en proceso de valoración o con necesidades identificadas.</p>
+        <ul class="etiquetas" aria-label="Algunas neurodivergencias que atendemos">
+          <li>Autismo</li><li>TDAH</li><li>Dislexia</li><li>Dispraxia</li><li>Síndrome de Tourette</li><li>Otras</li>
+        </ul>
+        <p>La neurodivergencia no se presenta igual en todas las personas. Por eso nadie tiene que explicar su diagnóstico para pedir un apoyo.</p>
+      </div>
+    </section>
+
+    <!-- ===== PARTICIPA ===== -->
+    <section class="oscuro" id="participa" aria-labelledby="titulo-participa">
+      <div class="contenedor dos-col">
+        <div>
+          <h2 id="titulo-participa">Diseñamos contigo, no solo para ti</h2>
+          <p class="intro">La participación es voluntaria y tu información se maneja de forma confidencial.</p>
+        </div>
+        <div>
+          <h3>Cómo nos mantenemos en contacto</h3>
+          <ul class="lista-marcada">
+            <li>Un perfil de necesidades que tú configuras y puedes cambiar cuando quieras.</li>
+            <li>Encuestas breves y confidenciales.</li>
+            <li>Un canal digital para solicitar apoyos.</li>
+            <li>Una comunidad de estudiantes embajadores.</li>
+            <li>Pruebas piloto y sesiones de codiseño.</li>
+            <li>Una evaluación de la experiencia cada semestre.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== UNIVERSIDADES ===== -->
+    <section class="claro" id="universidades" aria-labelledby="titulo-univ">
+      <div class="contenedor">
+        <h2 id="titulo-univ" class="titulo-partido"><span class="bloque">Para</span> <span>universidades</span></h2>
+        <p class="intro">Aula Nexo es un negocio con misión social, no una acción de asistencia. La universidad financia el servicio para que el costo no recaiga en el estudiante.</p>
+
+        <div class="rejilla ingresos">
+          <div class="pieza" style="--c: var(--verde)">
+            <h3>Licencia institucional</h3>
+            <p>Pago anual según el número de estudiantes o de campus.</p>
+          </div>
+          <div class="pieza" style="--c: var(--morado)">
+            <h3>Implementación y capacitación</h3>
+            <p>Diagnóstico inicial, configuración y formación docente.</p>
+          </div>
+          <div class="pieza" style="--c: var(--menta)">
+            <h3>Distintivo Aula Nexo</h3>
+            <p>Evaluación periódica de las prácticas inclusivas del campus.</p>
+          </div>
+          <div class="pieza" style="--c: var(--naranja)">
+            <h3>Plan individual opcional</h3>
+            <p>Funciones adicionales a bajo costo. Las herramientas básicas siempre son gratuitas para el estudiante.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ESCALABILIDAD ===== -->
+    <section class="oscuro" id="crecimiento" aria-labelledby="titulo-crec">
+      <div class="contenedor">
+        <h2 id="titulo-crec">Empezar en un campus, transformar muchas aulas</h2>
+        <ol class="etapas">
+          <li style="--c: var(--verde)"><h3>Piloto</h3><p>Aplicación en un campus y evaluación con estudiantes y docentes.</p></li>
+          <li style="--c: var(--morado)"><h3>Expansión</h3><p>Implementación en otros campus de la misma universidad.</p></li>
+          <li style="--c: var(--naranja)"><h3>Red universitaria</h3><p>Licenciamiento a otras universidades.</p></li>
+          <li style="--c: var(--rosa)"><h3>Nuevos entornos</h3><p>Adaptación para preparatoria, capacitación laboral y educación en línea.</p></li>
+        </ol>
+        <div class="indicadores">
+          <h3>Cómo medimos el impacto</h3>
+          <p>Permanencia estudiantil, bienestar y sentido de pertenencia, uso de herramientas inclusivas y satisfacción de estudiantes y docentes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ACCESIBILIDAD (POUR) ===== -->
+    <section class="claro" id="accesibilidad" aria-labelledby="titulo-pour">
+      <div class="contenedor">
+        <h2 id="titulo-pour" class="titulo-partido"><span class="bloque">Un sitio</span> <span>para todos</span></h2>
+        <p class="intro">Este sitio sigue la metodología POUR: todo su contenido debe ser perceptible, operable, comprensible y robusto.</p>
+
+        <div class="pour">
+          <article style="--c: var(--verde)">
+            <span class="letra" aria-hidden="true">P</span>
+            <h3>Perceptible</h3>
+            <p>La información se puede percibir de más de una forma.</p>
+            <ul>
+              <li>Contraste alto entre texto y fondo, y botón de alto contraste.</li>
+              <li>Tres tamaños de texto disponibles.</li>
+              <li>El color nunca es la única forma de dar información.</li>
+              <li>Tipografía Atkinson Hyperlegible, creada para baja visión.</li>
+            </ul>
+          </article>
+          <article style="--c: var(--morado)">
+            <span class="letra" aria-hidden="true">O</span>
+            <h3>Operable</h3>
+            <p>Se puede usar con teclado, mouse o pantalla táctil.</p>
+            <ul>
+              <li>Enlace para saltar al contenido principal.</li>
+              <li>Foco visible al navegar con la tecla Tab.</li>
+              <li>Botones de al menos 44 × 44 píxeles.</li>
+              <li>Sin carruseles ni límites de tiempo; animaciones opcionales.</li>
+            </ul>
+          </article>
+          <article style="--c: var(--naranja)">
+            <span class="letra" aria-hidden="true">U</span>
+            <h3>Comprensible</h3>
+            <p>El contenido es claro y el sitio se comporta como se espera.</p>
+            <ul>
+              <li>Lenguaje sencillo y frases cortas.</li>
+              <li>Menú igual en todo el sitio.</li>
+              <li>Modo lectura con más espacio entre letras y líneas.</li>
+              <li>Errores del formulario que dicen qué pasó y cómo corregirlo.</li>
+            </ul>
+          </article>
+          <article style="--c: var(--menta)">
+            <span class="letra" aria-hidden="true">R</span>
+            <h3>Robusto</h3>
+            <p>Funciona con distintos navegadores y tecnologías de apoyo.</p>
+            <ul>
+              <li>HTML semántico: encabezados, listas y regiones.</li>
+              <li>Etiquetas ARIA para lectores de pantalla.</li>
+              <li>Idioma de la página declarado en español.</li>
+              <li>Diseño que se adapta a celular, tableta y computadora.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACTO ===== -->
+    <section class="oscuro" id="contacto" aria-labelledby="titulo-contacto">
+      <div class="contenedor">
+        <h2 id="titulo-contacto">Solicita una demostración</h2>
+        <p class="intro">Déjanos tus datos y te contactamos. Los campos marcados como obligatorios son necesarios para responderte.</p>
+
+        <div id="estado" class="estado" role="status" aria-live="polite"></div>
+
+        <form id="formulario" novalidate>
+          <div class="campo">
+            <label for="nombre">Nombre completo (obligatorio)</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="name" required aria-describedby="error-nombre">
+            <span class="error" id="error-nombre"></span>
+          </div>
+
+          <div class="campo">
+            <label for="correo">Correo electrónico (obligatorio)</label>
+            <span class="ayuda" id="ayuda-correo">Ejemplo: nombre@universidad.mx</span>
+            <input type="email" id="correo" name="correo" autocomplete="email" required aria-describedby="ayuda-correo error-correo">
+            <span class="error" id="error-correo"></span>
+          </div>
+
+          <div class="campo">
+            <label for="perfil">Me interesa como… (obligatorio)</label>
+            <select id="perfil" name="perfil" required aria-describedby="error-perfil">
+              <option value="">Elige una opción</option>
+              <option>Estudiante</option>
+              <option>Docente</option>
+              <option>Universidad</option>
+              <option>Otro</option>
+            </select>
+            <span class="error" id="error-perfil"></span>
+          </div>
+
+          <div class="campo">
+            <label for="mensaje">Mensaje (opcional)</label>
+            <textarea id="mensaje" name="mensaje"></textarea>
+          </div>
+
+          <div class="campo">
+            <div class="check">
+              <input type="checkbox" id="aviso" name="aviso" required aria-describedby="error-aviso">
+              <label for="aviso">Acepto que Aula Nexo use mis datos solo para responder esta solicitud. (obligatorio)</label>
+            </div>
+            <span class="error" id="error-aviso"></span>
+          </div>
+
+          <div><button type="submit" class="btn btn-primario">Enviar solicitud</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== PIE ===== -->
+  <footer class="claro">
+    <div class="contenedor">
+      <div>
+        <p><strong>Aula Nexo</strong><br>Proyecto de Iaomsued Mateo Santiesteban Arias<br>Diseñar para compartir · Universidad del Valle de México<br>Docente: Myrthala Flores Frausto</p>
+        <p>Este sitio es una maqueta académica. El formulario no envía datos.</p>
+        <p><a href="#inicio">Volver al inicio</a></p>
+      </div>
+      <div>
+        <h2>Referencias</h2>
+        <ul class="referencias">
+          <li>CAST. (2024). <i>Universal Design for Learning Guidelines, version 3.0</i>. <a href="https://udlguidelines.cast.org">https://udlguidelines.cast.org</a></li>
+          <li>Danielson, M. L., Claussen, A. H., Bitsko, R. H., Katz, S. M., Newsome, K., Blumberg, S. J., Kogan, M. D., &amp; Ghandour, R. M. (2024). ADHD prevalence among U.S. children and adolescents in 2022. <i>Journal of Clinical Child &amp; Adolescent Psychology, 53</i>(3), 343–360. <a href="https://doi.org/10.1080/15374416.2024.2335625">https://doi.org/10.1080/15374416.2024.2335625</a></li>
+          <li>International Dyslexia Association. (s. f.). <i>Frequently asked questions</i>. <a href="https://dyslexiaida.org/frequently-asked-questions-2/">https://dyslexiaida.org/frequently-asked-questions-2/</a></li>
+          <li>Organización Mundial de la Salud. (2025). <i>Autism</i>. <a href="https://www.who.int/news-room/fact-sheets/detail/autism-spectrum-disorders">https://www.who.int/news-room/fact-sheets/detail/autism-spectrum-disorders</a></li>
+          <li>Smyk, A. (2017, 24 de noviembre). <i>Design with accessibility in mind: The POUR methodology</i>. Adobe Blog. <a href="https://blog.adobe.com/en/publish/2017/11/24/design-with-accessibility-in-mind-the-pour-methodology">https://blog.adobe.com/en/publish/2017/11/24/design-with-accessibility-in-mind-the-pour-methodology</a></li>
+          <li>UNESCO. (2017). <i>A guide for ensuring inclusion and equity in education</i>. <a href="https://unesdoc.unesco.org/ark:/48223/pf0000248254">https://unesdoc.unesco.org/ark:/48223/pf0000248254</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ---------- Guardar preferencias (si el navegador lo permite) ----------
+    function guardar(clave, valor) { try { localStorage.setItem(clave, valor); } catch (e) {} }
+    function leer(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+
+    // ---------- Tamaño de texto ----------
+    const botonesTexto = document.querySelectorAll('[data-texto]');
+    function ponerTexto(tam) {
+      document.documentElement.dataset.texto = tam;
+      botonesTexto.forEach(b => b.setAttribute('aria-pressed', b.dataset.texto === tam));
+      guardar('an-texto', tam);
+    }
+    botonesTexto.forEach(b => b.addEventListener('click', () => ponerTexto(b.dataset.texto)));
+    ponerTexto(leer('an-texto') || 'normal');
+
+    // ---------- Modos (lectura, contraste, animaciones) ----------
+    document.querySelectorAll('[data-modo]').forEach(boton => {
+      const modo = boton.dataset.modo;
+      const aplicar = activo => {
+        document.body.classList.toggle(modo, activo);
+        boton.setAttribute('aria-pressed', activo);
+        guardar('an-' + modo, activo ? '1' : '0');
+      };
+      boton.addEventListener('click', () => aplicar(boton.getAttribute('aria-pressed') !== 'true'));
+      aplicar(leer('an-' + modo) === '1');
+    });
+
+    // ---------- Menú en celular ----------
+    const btnMenu = document.querySelector('.btn-menu');
+    const menu = document.getElementById('menu');
+    const esMovil = () => window.matchMedia('(max-width: 960px)').matches;
+    function cerrarMenu() { if (esMovil()) { menu.hidden = true; btnMenu.setAttribute('aria-expanded', 'false'); } }
+    if (esMovil()) menu.hidden = true;
+    btnMenu.addEventListener('click', () => {
+      const abierto = btnMenu.getAttribute('aria-expanded') === 'true';
+      btnMenu.setAttribute('aria-expanded', !abierto);
+      menu.hidden = abierto;
+    });
+    menu.addEventListener('click', e => { if (e.target.closest('a')) cerrarMenu(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && btnMenu.getAttribute('aria-expanded') === 'true') { cerrarMenu(); btnMenu.focus(); }
+    });
+    window.addEventListener('resize', () => { if (!esMovil()) menu.hidden = false; else if (btnMenu.getAttribute('aria-expanded') !== 'true') menu.hidden = true; });
+
+    // ---------- Formulario con errores claros ----------
+    const form = document.getElementById('formulario');
+    const estado = document.getElementById('estado');
+    const reglas = {
+      nombre: c => c.value.trim() ? '' : 'Escribe tu nombre completo.',
+      correo: c => !c.value.trim() ? 'Escribe tu correo electrónico.'
+               : !c.validity.valid ? 'El correo debe tener la forma nombre@dominio.mx.' : '',
+      perfil: c => c.value ? '' : 'Elige una opción de la lista.',
+      aviso:  c => c.checked ? '' : 'Marca la casilla para aceptar el uso de tus datos.'
+    };
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      let primero = null, total = 0;
+      for (const id in reglas) {
+        const campo = document.getElementById(id);
+        const msg = reglas[id](campo);
+        document.getElementById('error-' + id).textContent = msg;
+        campo.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        if (msg) { total++; if (!primero) primero = campo; }
+      }
+      if (primero) {
+        estado.className = 'estado mal';
+        estado.textContent = total === 1 ? 'Hay 1 campo por corregir.' : `Hay ${total} campos por corregir.`;
+        primero.focus();
+      } else {
+        estado.className = 'estado ok';
+        estado.textContent = 'Demostración completada: este formulario es parte de un proyecto escolar prueba, por lo que este formulario es ficticio y no envía datos. ';
+        form.reset();
+        form.querySelectorAll('[aria-invalid]').forEach(c => c.setAttribute('aria-invalid', 'false'));
+      }
+    });
+  </script>
+</body>
+</html>
